@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northgate Physiotherapy · Book an appointment</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; color: #1c1b29; }
+    h1 { color: #1f6fe0; }
+    select, button { font: inherit; padding: 6px 10px; }
+    li { margin: 6px 0; }
+    footer { margin-top: 40px; color: #6b7280; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Northgate Physiotherapy</h1>
+  <p>Book your appointment online.</p>
+  <label>Clinic
+    <select id="clinic">
+      <option>Leeds</option>
+      <option>York</option>
+    </select>
+  </label>
+  <button id="show">Show available slots</button>
+  <ul id="slots"></ul>
+  <footer>Northgate Booking · LearnWithPride DevOps training app · <a href="health">health</a></footer>
+  <script>
+    document.getElementById("show").addEventListener("click", async () => {
+      const clinic = document.getElementById("clinic").value;
+      const res = await fetch("api/slots?clinic=" + encodeURIComponent(clinic));
+      const slots = await res.json();
+      const list = document.getElementById("slots");
+      list.innerHTML = "";
+      for (const s of slots) {
+        const li = document.createElement("li");
+        li.textContent = new Date(s.start).toLocaleString("en-GB") + " · " + s.type.replace("_", " ").toLowerCase() + " (" + s.minutes + " min)";
+        list.appendChild(li);
+      }
+      if (!slots.length) list.innerHTML = "<li>No appointments available</li>";
+    });
+  </script>
+</body>
+</html>

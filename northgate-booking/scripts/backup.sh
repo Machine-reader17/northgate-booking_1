@@ -12,7 +12,7 @@ DEFAULT_SOURCE="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 
 # Allow callers to override the source and destination.
 SOURCE_INPUT="${1:-$DEFAULT_SOURCE}"
-DEST_INPUT="${2:-${HOME:-/home/deploy}/backups/northgate}"
+DEST_INPUT="${2:-/home/deploy/backups/northgate}"
 
 # Reject unexpected arguments.
 if (( $# > 2 )); then
@@ -51,11 +51,12 @@ if ! flock -n 9; then
     exit 1
 fi
 
-# Report unexpected failures and return a non-zero exit code.
 on_error() {
     local exit_code=$?
+    local failed_line=${BASH_LINENO[0]}
+
     trap - ERR
-    log "ERROR: Backup failed near line ${BASH_LINENO[0]} (exit code: $exit_code)"
+    log "ERROR: Backup failed near line ${failed_line} (exit code: ${exit_code})"
     exit "$exit_code"
 }
 trap on_error ERR
@@ -86,11 +87,15 @@ tar -tzf "$TEMP_ARCHIVE" > /dev/null
 mv -- "$TEMP_ARCHIVE" "$ARCHIVE_PATH"
 log "Archive created: $ARCHIVE_PATH"
 
-# Sort timestamped archives newest first.
-mapfile -t BACKUPS < <(
+# Collect timestamped archives, newest first.
+BACKUPS=()
+
+while IFS= read -r BACKUP; do
+    BACKUPS+=("$BACKUP")
+done < <(
     find "$DEST_DIR" -maxdepth 1 -type f \
-        -name 'northgate-backup-*.tar.gz' -printf '%f\n' \
-        | sort -r
+        -name 'northgate-backup-*.tar.gz' \
+        -printf '%f\n' | sort -r
 )
 
 # Delete older archives, keeping only the latest seven.

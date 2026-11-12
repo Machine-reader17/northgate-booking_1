@@ -12,6 +12,8 @@ DEFAULT_SOURCE="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 
 # Allow callers to override the source and destination.
 SOURCE_INPUT="${1:-$DEFAULT_SOURCE}"
+# Use an absolute path so the backup destination is predictable under cron,
+# where HOME may differ from the interactive shell environment.
 DEST_INPUT="${2:-/home/deploy/backups/northgate}"
 
 # Reject unexpected arguments.

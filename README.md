@@ -41,3 +41,12 @@ tar -xzf /home/deploy/backups/northgate/northgate-backup-YYYY-MM-DD_HHMMSS.tar.g
 Inspect the extracted files and verify that the expected project files are present.
 
 **Important:** Test restoration in a separate directory before replacing any live application files. A production restoration should account for application downtime, existing files, configuration, ownership and permissions.
+
+# Standard build
+mvn clean verify
+
+# Development build
+mvn clean verify -Pdev
+
+# Production build
+mvn clean verify -Pprod

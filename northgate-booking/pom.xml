@@ -1,13 +1,16 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- Northgate Physiotherapy online booking app: LearnWithPride DevOps training starter. -->
+    <!-- Northgate Physiotherapy online booking app: LearnWithPride DevOps training -->
+
   <groupId>com.northgate</groupId>
   <artifactId>booking</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>war</packaging>
   <name>Northgate Booking</name>
 
@@ -18,13 +21,13 @@
   </properties>
 
   <dependencies>
-    <!-- Provided by Tomcat 10.1+ at runtime -->
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
       <version>6.0.0</version>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -35,21 +38,37 @@
 
   <build>
     <finalName>booking</finalName>
+
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <release>17</release>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.4.0</version>
         <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
+         <failOnMissingWebXml>false</failOnMissingWebXml>
+         <archive>
+          <manifestEntries>
+           <Implementation-Version>${project.version}</Implementation-Version>
+          </manifestEntries>
+         </archive>
         </configuration>
       </plugin>
-      <!-- Code coverage report (target/site/jacoco) for Jenkins and SonarQube -->
+
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -71,4 +90,22 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <properties>
+        <build.environment>development</build.environment>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>prod</id>
+      <properties>
+        <build.environment>production</build.environment>
+      </properties>
+    </profile>
+  </profiles>
+
 </project>
+

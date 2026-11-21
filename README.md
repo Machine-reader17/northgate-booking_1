@@ -76,3 +76,13 @@ Build outputs
 The WAR filename remains `booking.war`. The project version is embedded in the WAR manifest as `Implementation-Version`.
 
 The development and production Maven profiles currently identify the selected build environment. They do not yet change application runtime behaviour.
+
+Versioning Convention
+
+This project follows Semantic Versioning (`MAJOR.MINOR.PATCH`).
+- Development builds use the `-SNAPSHOT` suffix (e.g. `1.0.1-SNAPSHOT`).
+- Stable releases use fixed versions without the suffix (e.g. `1.0.0`).
+- Release versions are incremented according to the changes and tagged in Git.
+- Patch releases contain backward-compatible fixes, minor releases add backward-compatible functionality, and major releases introduce breaking changes.
+
+The Maven WAR filename includes the project version, for example `booking-1.0.0.war`.
